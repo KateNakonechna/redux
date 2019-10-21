@@ -1,36 +1,51 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { fetchPosts } from "../../store/posts/actions";
 import PostList from "./PostList";
+import { useSelector, useDispatch } from "react-redux";
+import { GET_POSTS } from "../../store/posts/actions";
 
-class PostsContainer extends Component {
-  componentDidMount() {
-    this.props.fetchPosts();
-  }
+const PostsContainer = () => {
+  const posts = useSelector(state => state.posts);
+  const dispatch = useDispatch();
+  // componentDidMount() {
+  //   this.props.fetchPosts();
+  // }
 
-  render() {
-    return (
-      <div>
-        <h1>Posts</h1>
-        <PostList posts={this.props.posts}></PostList>
-        {/* {postItems} */}
-      </div>
-    );
-  }
-}
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchPosts: () => {
-      dispatch(fetchPosts());
-    }
-  };
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/posts")
+      .then(res => res.json())
+      .then(posts =>
+        dispatch({
+          type: GET_POSTS,
+          payload: posts
+        })
+      );
+    console.log(posts);
+    // return () => {
+    //   cleanup
+    // };
+  }, []);
+
+  return (
+    <div>
+      <h1>Posts</h1>
+      <PostList posts={posts}></PostList>
+      {/* {postItems} */}
+    </div>
+  );
 };
 
-const mapStateToProps = state => ({
-  posts: state.posts.posts
-});
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     fetchPosts: () => {
+//       dispatch(fetchPosts());
+//     }
+//   };
+// };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PostsContainer);
+// const mapStateToProps = state => ({
+//   posts: state.posts.posts
+// });
+
+export default PostsContainer;

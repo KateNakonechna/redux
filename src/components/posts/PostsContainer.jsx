@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { fetchPosts } from "../../store/posts/actions";
 import PostList from "./PostList";
 import { useSelector, useDispatch } from "react-redux";
-import { GET_POSTS } from "../../store/posts/actions";
 
 const PostsContainer = () => {
   const posts = useSelector(state => state.posts);
@@ -13,14 +12,7 @@ const PostsContainer = () => {
   // }
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then(res => res.json())
-      .then(posts =>
-        dispatch({
-          type: GET_POSTS,
-          payload: posts
-        })
-      );
+    dispatch(fetchPosts());
     console.log(posts);
     // return () => {
     //   cleanup
@@ -47,5 +39,10 @@ const PostsContainer = () => {
 // const mapStateToProps = state => ({
 //   posts: state.posts.posts
 // });
+
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(PostsContainer);
 
 export default PostsContainer;
